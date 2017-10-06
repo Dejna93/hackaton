@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.helpers.Direction;
+import com.mygdx.helpers.Kierunek;
 import com.mygdx.helpers.GameHelper;
-import com.mygdx.helpers.Rotation;
+import com.mygdx.helpers.Obrot;
 
 /**
  * Created by d.holuj on 06-Oct-17.
@@ -20,12 +20,12 @@ public class Tank extends GameHelper{
     SpriteBatch batch;
     public long lastShotTime;
 
-    int currentState = Direction.UP;
+    int currentState = Kierunek.GORA;
     private float deltaTime;
-    private float speed =100;
+    private float speed = 100;
 
     public Tank(SpriteBatch batch) {
-        playerTexture = new Texture("player.jpg");
+        playerTexture = new Texture("player.png");
         // Sprite dla gracza przyjmuje texture i 16x16 dlugosc i szerokosc
         playerSprite = new Sprite(playerTexture, 16, 16);
         this.batch = batch;
@@ -43,7 +43,7 @@ public class Tank extends GameHelper{
         this.deltaTime = delta;
         Rectangle endPosition;
         boolean allClear = true;
-        if (directionMove == Direction.LEFT) {
+        if (directionMove == Kierunek.LEWO) {
             endPosition = moveLeft();
             if (!inGameArea(endPosition, -16)){
                 allClear = false;
@@ -57,7 +57,7 @@ public class Tank extends GameHelper{
             if (allClear){
                 setPositionFromRectangle(moveLeft());
             }
-        } else if (directionMove == Direction.RIGHT) {
+        } else if (directionMove == Kierunek.PRAWO) {
             endPosition = moveRight();
             if (!inGameArea(endPosition, -16)){
                 allClear = false;
@@ -71,7 +71,7 @@ public class Tank extends GameHelper{
             if (allClear){
                 setPositionFromRectangle(moveRight());
             }
-        } else if (directionMove == Direction.UP) {
+        } else if (directionMove == Kierunek.GORA) {
             endPosition = moveUp();
             if (!inGameArea(endPosition, -16)){
                 allClear = false;
@@ -85,7 +85,7 @@ public class Tank extends GameHelper{
             if (allClear){
                 setPositionFromRectangle(moveUp());
             }
-        } else if (directionMove == Direction.DOWN) {
+        } else if (directionMove == Kierunek.DOL) {
             endPosition = moveDown();
             if (!inGameArea(endPosition, -16)){
                 allClear = false;
@@ -125,17 +125,17 @@ public class Tank extends GameHelper{
 
     private void changeDirection(int direction) {
         this.currentState = direction;
-        if (direction == Direction.LEFT) {
-            playerSprite.setRotation(Rotation.LEFT);
+        if (direction == Kierunek.LEWO) {
+            playerSprite.setRotation(Obrot.LEWO);
         }
-        if (direction == Direction.RIGHT) {
-            playerSprite.setRotation(Rotation.RIGHT);
+        if (direction == Kierunek.PRAWO) {
+            playerSprite.setRotation(Obrot.PRAWO);
         }
-        if (direction == Direction.UP) {
-            playerSprite.setRotation(Rotation.UP);
+        if (direction == Kierunek.GORA) {
+            playerSprite.setRotation(Obrot.GORA);
         }
-        if (direction == Direction.DOWN) {
-            playerSprite.setRotation(Rotation.DOWN);
+        if (direction == Kierunek.DOL) {
+            playerSprite.setRotation(Obrot.DOL);
         }
 
     }

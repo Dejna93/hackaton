@@ -13,10 +13,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.enemies.Bullet;
+import com.mygdx.enemies.Pocisk;
 import com.mygdx.enemies.Eksplozja;
 import com.mygdx.enemies.Tank;
-import com.mygdx.helpers.Direction;
+import com.mygdx.helpers.Kierunek;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -35,7 +35,7 @@ public class PlayScreen implements Screen {
     private Tank player;
 
     private Array<Tank> enemyTanks = new Array<Tank>();
-    private Array<Bullet> bullets = new Array<Bullet>();
+    private Array<Pocisk> bullets = new Array<Pocisk>();
     private Array<Eksplozja> eksplozjaArray = new Array<Eksplozja>();
 
     private Texture shootButtonTexture;
@@ -87,36 +87,36 @@ public class PlayScreen implements Screen {
 
             if (shootButton.contains(touchPos.x, touchPos.y)) {
                 if (player.lastShotTime + 500 < TimeUtils.millis()) {
-                    bullets.add(new Bullet(game.batch, player.getDirection(), player.getX() + 7.5f, player.getY() + 7.5f));
+                    bullets.add(new Pocisk(game.batch, player.getDirection(), player.getX() + 7.5f, player.getY() + 7.5f));
                     player.lastShotTime = TimeUtils.millis();
                 }
             } else if ((Math.abs(touchPos.x - tankPos.getX())) > (Math.abs(touchPos.y - tankPos.getY()))) {
                 if (touchPos.x > tankPos.getX()) {
-                    player.move(Direction.RIGHT, dt, enemyTanks);
+                    player.move(Kierunek.PRAWO, dt, enemyTanks);
                 } else {
-                    player.move(Direction.LEFT, dt, enemyTanks);
+                    player.move(Kierunek.LEWO, dt, enemyTanks);
                 }
             } else {
                 if (touchPos.y > tankPos.getY()) {
-                    player.move(Direction.UP, dt, enemyTanks);
+                    player.move(Kierunek.GORA, dt, enemyTanks);
                 } else {
-                    player.move(Direction.DOWN, dt, enemyTanks);
+                    player.move(Kierunek.DOL, dt, enemyTanks);
                 }
             }
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
         {
-            player.move(Direction.LEFT, dt, enemyTanks);
+            player.move(Kierunek.LEWO, dt, enemyTanks);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            player.move(Direction.RIGHT, dt, enemyTanks);
+            player.move(Kierunek.PRAWO, dt, enemyTanks);
         } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player.move(Direction.UP, dt, enemyTanks);
+            player.move(Kierunek.GORA, dt, enemyTanks);
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player.move(Direction.DOWN, dt, enemyTanks);
+            player.move(Kierunek.DOL, dt, enemyTanks);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             if (player.lastShotTime + 500 < TimeUtils.millis()) {
-                bullets.add(new Bullet(game.batch, player.getDirection(), player.getX() + 7.5f, player.getY() + 7.5f));
+                bullets.add(new Pocisk(game.batch, player.getDirection(), player.getX() + 7.5f, player.getY() + 7.5f));
                 player.lastShotTime = TimeUtils.millis();
             }
         }
@@ -139,9 +139,9 @@ public class PlayScreen implements Screen {
             tank.draw();
         }
 
-        Iterator<Bullet> iter = bullets.iterator();
+        Iterator<Pocisk> iter = bullets.iterator();
         while (iter.hasNext()) {
-            Bullet bullet = iter.next();
+            Pocisk bullet = iter.next();
             if (bullet.inGameArea(bullet.getRectangle(), -3)) {
                 bullet.move();
                 bullet.draw();
@@ -169,7 +169,7 @@ public class PlayScreen implements Screen {
         enemyTanks.removeIndex(enemyTanks.indexOf(czolg, false));
     }
 
-    private void usunPocisk(Bullet pocisk){
+    private void usunPocisk(Pocisk pocisk){
         bullets.removeIndex(bullets.indexOf(pocisk, false));
     }
 

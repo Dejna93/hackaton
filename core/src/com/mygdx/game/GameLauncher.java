@@ -23,8 +23,8 @@ public class GameLauncher implements Screen {
 
     private Texture background;
     private final String title = "ULTIMATE TANK SHOOTER";
-    private  final String instruction_1 = "Press TANK for RAINING";
-    private  final String instruction_2 = "BLOOOOOOOOD!!";
+    private final String instruction_1 = "Press TANK for RAINING";
+    private final String instruction_2 = "BLOOOOOOOOD!!";
     private MyGame game;
     private Viewport gamePort;
     private OrthographicCamera gameCamera;
@@ -51,8 +51,8 @@ public class GameLauncher implements Screen {
 //                Gdx.app.log("Mouse Event","Projected at " + touchPos.x + "," + touchPos.y);
 //            }
         }
-//        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) leftButton.x -= 200 * dt;
-//        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) leftButton.x += 200 * dt;
+//        if(Gdx.input.isKeyPressed(Input.Keys.LEWO)) leftButton.x -= 200 * dt;
+//        if(Gdx.input.isKeyPressed(Input.Keys.PRAWO)) leftButton.x += 200 * dt;
     }
 
     @Override
