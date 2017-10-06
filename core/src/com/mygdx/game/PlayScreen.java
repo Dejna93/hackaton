@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.enemies.Player;
 
 /**
  * Created by d.holuj on 06-Oct-17.
@@ -23,16 +24,15 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
     private OrthographicCamera gameCamera;
 
-    private Rectangle leftButton;
-    private Rectangle rightButton;
+    private Player player;
+
 
     public PlayScreen(MyGame game) {
         this.game = game;
         img = new Texture("badlogic.jpg");
         gameCamera = new OrthographicCamera();
         gamePort = new FillViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, gameCamera);
-        leftButton = new Rectangle(5, 20, 5, 5);
-        rightButton = new Rectangle(100, 20, 5, 5);
+        player = new Player(this.game.batch);
     }
 
     public void update(float dt) {
@@ -44,12 +44,12 @@ public class PlayScreen implements Screen {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
             gameCamera.unproject(touchPos);
-            if (leftButton.contains(new Vector2(touchPos.x,touchPos.y))){
-                Gdx.app.log("Mouse Event","Projected at " + touchPos.x + "," + touchPos.y);
-            }
+//            if (leftButton.contains(new Vector2(touchPos.x,touchPos.y))){
+//                Gdx.app.log("Mouse Event","Projected at " + touchPos.x + "," + touchPos.y);
+//            }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) leftButton.x -= 200 * dt;
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) leftButton.x += 200 * dt;
+//        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) leftButton.x -= 200 * dt;
+//        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) leftButton.x += 200 * dt;
     }
 
     @Override
@@ -60,9 +60,10 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCamera.combined);
 
         gameCamera.update();
+        player.draw();
 
         game.batch.begin();
-        game.batch.draw(img, leftButton.x, leftButton.y);
+        //game.batch.draw(img, leftButton.x, leftButton.y);
         game.batch.end();
     }
 
