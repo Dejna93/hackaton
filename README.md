@@ -16,7 +16,17 @@ Odpalcie plik w ścieżce **android/java/package/AndroidLauncher**. Widzimy, że
 Znaczy to Przy Stworzeniu. Brzmi mistycznie, ale chodzi o to, co pojawi się na naszym ekranie, kiedy apka wystartuje. I co tam się dzieje? Inicjalizujemy MyGame -> brzmi dość logicznie, prawda? Czyli startuje gra! Ale wszystko, co startuje, musi mieć ustawienia. Po to jest AndroidApplicationConfiguration.
 ###### 3. No to zobaczmy, co zawiera ten plik MyGame
 MyGame jest bardzo prosty. Ma pola:
---Muzykę -> chcemy grać coś w tle, aby uprzyjemnić rozlew krwi.
---Rozmiary ekranu -> Jego wysokość i szerokość jest tutaj zdefiniowana
---Ustaw Ekran -> setScreen pokaże nam kolejna klasę, którą rozpoczniemy grę.
+- Muzykę -> chcemy grać coś w tle, aby uprzyjemnić rozlew krwi.
+- Rozmiary ekranu -> Jego wysokość i szerokość jest tutaj zdefiniowana
+- Ustaw Ekran -> setScreen pokaże nam kolejna klasę, którą rozpoczniemy grę.
 ###### 4. Czyli MyGame tak naprawdę odpala GameLauncher
+A co to jest GameLauncher?
+No chcemy mieć ekran startowy, zanim użytkownik zacznie grać. Co taki ekran ma zawierać?
+- Tytuł i instrukcję. One wyjaśnią użytkownikowi, jak uruchomić naszą aplikację i powitają go ciepło. Dane te przechowujemy w polach typu **string**. Następnie pobiera je BitmapFont, którego inizjalizujemy z naszą czcionką. Ale zaraz! Skąd mam wziąć czcionkę? To akurat jest proste. Libgdx dostarcza narzędzie do tego. Stworzymy nasz wygląd i zapiszemy pliki png i fnt w folderze assets pod android. Narzędzie nazywa się Hiero.
+- Potrzebujemy jeszcze obrazka, będącym logo/starterem naszej aplikacji. Zapisujemy go w teksturze (klasa texture). 
+
+No dobra, ale gdzie to wszystko upakować, czyli co robią kolejne metody w naszej implementacji Ekranu - Screen?
+Nasz ekran składa się z:
+- konstruktora -> Tu zainicjalizujemy nasze zmienne
+- funkcji update -> Tu będziemy pobierać dane od użytkownika. Metoda handle key uruchamia następny ekran po tym, jak Gdx.input.isTouched() zwróci prawda, czyli użytkownik dotknie ekranu.
+- render -> To odświeżamy non stop. Tutaj będziemy rysować i właśnie to robimy. Funkcje draw umieszczają nasze 3 obiekty na ekranie. Pamiętajcie, że lewy górny róg to 0,0. No i że trzeba odjąć pół obiektu, aby był na środku, bo nasza pozycja będzie dotyczyć domyślnie krawędzi. Stąd te dziwne odejmowanie i dodawanie.
