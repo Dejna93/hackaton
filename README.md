@@ -59,3 +59,6 @@ Zróbmy tak:
 - Postaraj się samodzielnie umieścić - narysować czołg.
 - Przesuń go. Użyj gotowego move. Zastanow się, jak to zrobć
 - Dodaj przeciwników, możesz wzorować się na naszym kodzie.
+
+Hej, Pamiętaj, że zawsze, kiedy czegoś nie jesteś pewien, możesz eksperymentować z gotowym, zakomentowanym kodem. 
+Życzymy przyjemnej rozgrywki :D
