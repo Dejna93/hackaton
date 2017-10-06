@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameLauncher implements Screen {
 
-    private final Music backgroundMusic;
+
     private Texture background;
     private final String title = "ULTIMATE TANK SHOOTER";
     private  final String instruction_1 = "Press TANK for RAINING";
@@ -36,9 +36,7 @@ public class GameLauncher implements Screen {
         background = new Texture("background.png");
         gameCamera = new OrthographicCamera();
         gamePort = new FillViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, gameCamera);
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
-        backgroundMusic.setLooping(true);
-        backgroundMusic.play();
+
         wzialemToZNeta = new BitmapFont(Gdx.files.internal("font.fnt"));
     }
 
