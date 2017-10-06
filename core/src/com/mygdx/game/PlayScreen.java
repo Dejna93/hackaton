@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.enemies.Player;
+import com.mygdx.helpers.Direction;
 
 /**
  * Created by d.holuj on 06-Oct-17.
@@ -25,6 +26,7 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gameCamera;
 
     private Player player;
+    private Player tank1;
 
 
     public PlayScreen(MyGame game) {
@@ -33,6 +35,7 @@ public class PlayScreen implements Screen {
         gameCamera = new OrthographicCamera();
         gamePort = new FillViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, gameCamera);
         player = new Player(this.game.batch);
+        tank1 = new Player(this.game.batch);
     }
 
     public void update(float dt) {
@@ -50,6 +53,10 @@ public class PlayScreen implements Screen {
         }
 //        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) leftButton.x -= 200 * dt;
 //        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) leftButton.x += 200 * dt;
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) player.move(Direction.LEFT);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) player.move(Direction.RIGHT);
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) player.move(Direction.UP);
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) player.move(Direction.DOWN);
     }
 
     @Override
@@ -61,6 +68,10 @@ public class PlayScreen implements Screen {
 
         gameCamera.update();
         player.draw();
+        int move = (int)(Math.random()*4);
+        Gdx.app.log("Mouse Event","Projected at " + move);
+        tank1.move(move);
+        tank1.draw();
 
         game.batch.begin();
         //game.batch.draw(img, leftButton.x, leftButton.y);
