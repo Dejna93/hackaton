@@ -17,6 +17,7 @@ import com.mygdx.enemies.Tank;
 import com.mygdx.helpers.Direction;
 
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by d.holuj on 06-Oct-17.
@@ -38,12 +39,15 @@ public class PlayScreen implements Screen {
         this.game = game;
         img = new Texture("badlogic.jpg");
         gameCamera = new OrthographicCamera();
+        gameCamera.setToOrtho(false);
         gamePort = new FillViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, gameCamera);
 
 
         player = new Tank(this.game.batch);
-        createTank(100, 100);
-        createTank(-200, -200);
+        player.setPosition(MyGame.V_WIDTH/2, MyGame.V_HEIGHT/2);
+        for (int i=0; i<4; i++){
+            createTankInRandomLocation();
+        }
     }
 
     public void update(float dt) {
@@ -55,69 +59,56 @@ public class PlayScreen implements Screen {
         tank.setPositionFromRectangle(new Rectangle(x,y,16,16));
         enemyTanks.add(tank);
     }
-    private boolean isCollision(Rectangle a , Rectangle b)
-    {
-        return a.overlaps(b);
+
+    public void createTankInRandomLocation(){
+        Random random = new Random();
+        float x = (float) (random.nextInt(MyGame.V_WIDTH+16) - 32);
+        float y = (float) (random.nextInt(MyGame.V_HEIGHT+16) - 32);
+        createTank(x, y);
     }
 
+
     public void handleKey(float dt) {
+        boolean allClear = true;
+        Rectangle endPosition;
+
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
             gameCamera.unproject(touchPos);
+            Rectangle tankPos = player.getRectangle();
+            if ((Math.abs(touchPos.x) - Math.abs(tankPos.getX())) > (Math.abs(touchPos.y) - Math.abs(tankPos.getY()))){
+                if (touchPos.x > tankPos.getX()){
+                    player.move(Direction.UP, dt, enemyTanks);
+                } else {
+                    player.move(Direction.DOWN, dt, enemyTanks);
+                }
+            } else {
+                if (touchPos.y > tankPos.getY()){
+                    player.move(Direction.RIGHT, dt, enemyTanks);
+                } else {
+                    player.move(Direction.LEFT, dt, enemyTanks);
+                }
+            }
 //            if (leftButton.contains(new Vector2(touchPos.x,touchPos.y))){
 //                Gdx.app.log("Mouse Event","Projected at " + touchPos.x + "," + touchPos.y);
 //            }
         }
-        boolean allClear = true;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+        else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
         {
-            for (Tank tank: enemyTanks){
-                if (isCollision(player.moveLeft(), tank.getRectangle())){
-                    allClear = false;
-                    break;
-                }
-            }
-            if (allClear){
-                player.move(Direction.LEFT, dt);
-            }
-
+            player.move(Direction.LEFT, dt, enemyTanks);
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
         {
-            for (Tank tank: enemyTanks){
-                if (isCollision(player.moveRight(), tank.getRectangle())){
-                    allClear = false;
-                    break;
-                }
-            }
-            if(allClear){
-                player.move(Direction.RIGHT, dt);
-            }
+            player.move(Direction.RIGHT, dt, enemyTanks);
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.UP))
         {
-            for (Tank tank: enemyTanks) {
-                if (isCollision(player.moveUp(), tank.getRectangle())){
-                    allClear = false;
-                    break;
-                }
-            }
-            if(allClear){
-                player.move(Direction.UP, dt);
-            }
+            player.move(Direction.UP, dt, enemyTanks);
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
         {
-            for (Tank tank: enemyTanks) {
-                if (isCollision(player.moveDown(), tank.getRectangle())){
-                    allClear = false;
-                    break;
-                }
-            }
-            if(allClear){
-                player.move(Direction.DOWN, dt);
-            }
+            player.move(Direction.DOWN, dt, enemyTanks);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
         {
@@ -137,7 +128,6 @@ public class PlayScreen implements Screen {
 
         gameCamera.update();
         player.draw();
-        //tank1.move(move)
         for (Tank tank: enemyTanks){
             tank.draw();
         }
@@ -145,10 +135,19 @@ public class PlayScreen implements Screen {
         Iterator<Bullet> iter = bullets.iterator();
         while(iter.hasNext()) {
             Bullet bullet = iter.next();
-            if (bullet.getX() >= Gdx.graphics.getBackBufferWidth() * -1 && bullet.getY() >= Gdx.graphics.getBackBufferHeight() * -1 && bullet.getX() <= Gdx.graphics.getBackBufferWidth() && bullet.getY() <= Gdx.graphics.getBackBufferHeight()){
+            if (bullet.inGameArea(bullet.getRectangle(), -3)){
                 bullet.move();
-
                 bullet.draw();
+                Iterator<Tank> tankIter = enemyTanks.iterator();
+                while(tankIter.hasNext()){
+                    Tank tank = tankIter.next();
+                    if (bullet.isCollision(bullet.getRectangle(), tank.getRectangle())){
+                        enemyTanks.removeIndex(enemyTanks.indexOf(tank, false));
+                        bullets.removeIndex(bullets.indexOf(bullet, false));
+                        createTankInRandomLocation();
+                        break;
+                    }
+                }
             }else{
                 bullets.removeIndex(bullets.indexOf(bullet, false));
             }

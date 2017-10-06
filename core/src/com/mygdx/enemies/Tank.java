@@ -4,14 +4,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.helpers.Direction;
+import com.mygdx.helpers.GameHelper;
 import com.mygdx.helpers.Rotation;
 
 /**
  * Created by d.holuj on 06-Oct-17.
  */
 
-public class Tank {
+public class Tank extends GameHelper{
 
     Sprite playerSprite;
     Texture playerTexture;
@@ -37,19 +39,66 @@ public class Tank {
         batch.end();
     }
 
-    public void move(int directionMove, float delta) {
+    public void move(int directionMove, float delta, Array<Tank> enemyTanks) {
         this.deltaTime = delta;
+        Rectangle endPosition;
+        boolean allClear = true;
         if (directionMove == Direction.LEFT) {
-            setPositionFromRectangle(moveLeft());
-        }
-        if (directionMove == Direction.RIGHT) {
-            setPositionFromRectangle(moveRight());
-        }
-        if (directionMove == Direction.UP) {
-            setPositionFromRectangle(moveUp());
-        }
-        if (directionMove == Direction.DOWN) {
-            setPositionFromRectangle(moveDown());
+            endPosition = moveLeft();
+            if (!inGameArea(endPosition, -16)){
+                allClear = false;
+            }
+            for (Tank tank: enemyTanks){
+                if (isCollision(endPosition, tank.getRectangle())){
+                    allClear = false;
+                    break;
+                }
+            }
+            if (allClear){
+                setPositionFromRectangle(moveLeft());
+            }
+        } else if (directionMove == Direction.RIGHT) {
+            endPosition = moveRight();
+            if (!inGameArea(endPosition, -16)){
+                allClear = false;
+            }
+            for (Tank tank: enemyTanks){
+                if (isCollision(endPosition, tank.getRectangle())){
+                    allClear = false;
+                    break;
+                }
+            }
+            if (allClear){
+                setPositionFromRectangle(moveRight());
+            }
+        } else if (directionMove == Direction.UP) {
+            endPosition = moveUp();
+            if (!inGameArea(endPosition, -16)){
+                allClear = false;
+            }
+            for (Tank tank: enemyTanks){
+                if (isCollision(endPosition, tank.getRectangle())){
+                    allClear = false;
+                    break;
+                }
+            }
+            if (allClear){
+                setPositionFromRectangle(moveUp());
+            }
+        } else if (directionMove == Direction.DOWN) {
+            endPosition = moveDown();
+            if (!inGameArea(endPosition, -16)){
+                allClear = false;
+            }
+            for (Tank tank: enemyTanks){
+                if (isCollision(endPosition, tank.getRectangle())){
+                    allClear = false;
+                    break;
+                }
+            }
+            if (allClear){
+                setPositionFromRectangle(moveDown());
+            }
         }
         changeDirection(directionMove);
     }

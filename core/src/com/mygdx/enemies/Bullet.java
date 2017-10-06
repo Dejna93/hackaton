@@ -6,12 +6,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.helpers.Direction;
+import com.mygdx.helpers.GameHelper;
 
 /**
  * Created by d.holuj on 06-Oct-17.
  */
 
-public class Bullet {
+public class Bullet extends GameHelper {
 
     private SpriteBatch batch;
     private int direction;
@@ -51,6 +52,11 @@ public class Bullet {
 
     public float getY() {
         return bulletSprite.getY();
+    }
+
+    public Rectangle getRectangle()
+    {
+        return new Rectangle(getX(),getY(),bulletSprite.getWidth(), bulletSprite.getHeight());
     }
 
 }
