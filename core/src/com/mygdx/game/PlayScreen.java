@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.enemies.Bullet;
+import com.mygdx.enemies.Eksplozja;
 import com.mygdx.enemies.Tank;
 import com.mygdx.helpers.Direction;
 
@@ -31,6 +33,7 @@ public class PlayScreen implements Screen {
 
     private Array<Tank> enemyTanks = new Array<Tank>();
     private Array<Bullet> bullets = new Array<Bullet>();
+    private Array<Eksplozja> eksplozjaArray = new Array<Eksplozja>();
 
     public PlayScreen(MyGame game) {
         this.game = game;
@@ -81,13 +84,8 @@ public class PlayScreen implements Screen {
                     player.move(Direction.UP, dt, enemyTanks);
                 } else {
                     player.move(Direction.DOWN, dt, enemyTanks);
-
-
                 }
             }
-//            if (leftButton.contains(new Vector2(touchPos.x,touchPos.y))){
-//                Gdx.app.log("Mouse Event","Projected at " + touchPos.x + "," + touchPos.y);
-//            }
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
         {
@@ -137,6 +135,7 @@ public class PlayScreen implements Screen {
                 while(tankIter.hasNext()){
                     Tank tank = tankIter.next();
                     if (bullet.isCollision(bullet.getRectangle(), tank.getRectangle())){
+                        utworzEksplozje(tank);
                         usunCzolg(tank);
                         usunPocisk(bullet);
                         createTankInRandomLocation();
@@ -147,9 +146,8 @@ public class PlayScreen implements Screen {
                 usunPocisk(bullet);
             }
         }
-
+        rysujEksplozje();
         game.batch.begin();
-        //game.batch.draw(img, leftButton.x, leftButton.y);
         game.batch.end();
     }
 
@@ -159,6 +157,29 @@ public class PlayScreen implements Screen {
 
     private void usunPocisk(Bullet pocisk){
         bullets.removeIndex(bullets.indexOf(pocisk, false));
+    }
+
+    private void usunEksplozje(Eksplozja eksplozja){
+        eksplozjaArray.removeIndex(eksplozjaArray.indexOf(eksplozja, false));
+    }
+
+    private void utworzEksplozje(Tank czolg){
+        Vector2 srodek_czolgu = new Vector2();
+        czolg.getRectangle().getCenter(srodek_czolgu);
+        Eksplozja eksplozja = new Eksplozja(game.batch, srodek_czolgu.x, srodek_czolgu.y);
+        eksplozjaArray.add(eksplozja);
+    }
+
+    private void rysujEksplozje(){
+        Iterator<Eksplozja> iterator = eksplozjaArray.iterator();
+        while(iterator.hasNext()){
+            Eksplozja eksplozja = iterator.next();
+            if (eksplozja.czy_trwa()){
+                eksplozja.rysuj();
+            }else{
+                usunEksplozje(eksplozja);
+            }
+        }
     }
 
     @Override
