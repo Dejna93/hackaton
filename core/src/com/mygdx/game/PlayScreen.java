@@ -35,35 +35,40 @@ public class PlayScreen implements Screen {
     private Array<Tank> enemyTanks = new Array<Tank>();
     private Array<Bullet> bullets = new Array<Bullet>();
 
+    private Texture shootButtonTexture;
+    private Rectangle shootButton;
+
     public PlayScreen(MyGame game) {
         this.game = game;
         img = new Texture("badlogic.jpg");
-        gameCamera = new OrthographicCamera();
+        gameCamera = new OrthographicCamera(MyGame.V_WIDTH, MyGame.V_HEIGHT);
         gameCamera.setToOrtho(false);
         gamePort = new FillViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, gameCamera);
 
-
+        shootButtonTexture = new Texture("shoot.png");
+        shootButton = new Rectangle(MyGame.V_WIDTH - 100, 60, 64, 64);
         player = new Tank(this.game.batch);
-        player.setPosition(MyGame.V_WIDTH/2, MyGame.V_HEIGHT/2);
-        for (int i=0; i<4; i++){
+        player.setPosition(MyGame.V_WIDTH / 2, MyGame.V_HEIGHT / 2);
+        for (int i = 0; i < 4; i++) {
             createTankInRandomLocation();
         }
+        gameCamera.position.set(MyGame.V_WIDTH / 2, MyGame.V_HEIGHT / 2, 0);
     }
 
     public void update(float dt) {
         handleKey(dt);
     }
 
-    public void createTank(float x, float y){
+    public void createTank(float x, float y) {
         Tank tank = new Tank(this.game.batch);
-        tank.setPositionFromRectangle(new Rectangle(x,y,16,16));
+        tank.setPositionFromRectangle(new Rectangle(x, y, 16, 16));
         enemyTanks.add(tank);
     }
 
-    public void createTankInRandomLocation(){
+    public void createTankInRandomLocation() {
         Random random = new Random();
-        float x = (float) (random.nextInt(MyGame.V_WIDTH+16) - 32);
-        float y = (float) (random.nextInt(MyGame.V_HEIGHT+16) - 32);
+        float x = (float) (random.nextInt(MyGame.V_WIDTH + 16) - 32);
+        float y = (float) (random.nextInt(MyGame.V_HEIGHT + 16) - 32);
         createTank(x, y);
     }
 
@@ -74,48 +79,40 @@ public class PlayScreen implements Screen {
 
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gameCamera.unproject(touchPos);
             Rectangle tankPos = player.getRectangle();
-            if ((Math.abs(touchPos.x - tankPos.getX())) > (Math.abs(touchPos.y - tankPos.getY()))){
-                if (touchPos.x > tankPos.getX()){
+
+            if (shootButton.contains(touchPos.x, touchPos.y)) {
+                if (player.lastShotTime + 500 < TimeUtils.millis()) {
+                    bullets.add(new Bullet(game.batch, player.getDirection(), player.getX() + 7.5f, player.getY() + 7.5f));
+                    player.lastShotTime = TimeUtils.millis();
+                }
+            } else if ((Math.abs(touchPos.x - tankPos.getX())) > (Math.abs(touchPos.y - tankPos.getY()))) {
+                if (touchPos.x > tankPos.getX()) {
                     player.move(Direction.RIGHT, dt, enemyTanks);
                 } else {
                     player.move(Direction.LEFT, dt, enemyTanks);
                 }
             } else {
-                if (touchPos.y > tankPos.getY()){
+                if (touchPos.y > tankPos.getY()) {
                     player.move(Direction.UP, dt, enemyTanks);
                 } else {
                     player.move(Direction.DOWN, dt, enemyTanks);
-
-
                 }
             }
-//            if (leftButton.contains(new Vector2(touchPos.x,touchPos.y))){
-//                Gdx.app.log("Mouse Event","Projected at " + touchPos.x + "," + touchPos.y);
-//            }
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-        {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             player.move(Direction.LEFT, dt, enemyTanks);
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-        {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             player.move(Direction.RIGHT, dt, enemyTanks);
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.UP))
-        {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player.move(Direction.UP, dt, enemyTanks);
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
-        {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             player.move(Direction.DOWN, dt, enemyTanks);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
-        {
-            if (player.lastShotTime + 500 < TimeUtils.millis()){
-                bullets.add(new Bullet(game.batch, player.getDirection(), player.getX()+7.5f , player.getY()+7.5f));
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (player.lastShotTime + 500 < TimeUtils.millis()) {
+                bullets.add(new Bullet(game.batch, player.getDirection(), player.getX() + 7.5f, player.getY() + 7.5f));
                 player.lastShotTime = TimeUtils.millis();
             }
         }
@@ -128,29 +125,33 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(gameCamera.combined);
 
+        game.batch.begin();
+        game.batch.draw(shootButtonTexture, shootButton.x, shootButton.y, shootButton.getWidth(), shootButton.getHeight());
+        game.batch.end();
+
         gameCamera.update();
         player.draw();
-        for (Tank tank: enemyTanks){
+        for (Tank tank : enemyTanks) {
             tank.draw();
         }
 
         Iterator<Bullet> iter = bullets.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Bullet bullet = iter.next();
-            if (bullet.inGameArea(bullet.getRectangle(), -3)){
+            if (bullet.inGameArea(bullet.getRectangle(), -3)) {
                 bullet.move();
                 bullet.draw();
                 Iterator<Tank> tankIter = enemyTanks.iterator();
-                while(tankIter.hasNext()){
+                while (tankIter.hasNext()) {
                     Tank tank = tankIter.next();
-                    if (bullet.isCollision(bullet.getRectangle(), tank.getRectangle())){
+                    if (bullet.isCollision(bullet.getRectangle(), tank.getRectangle())) {
                         enemyTanks.removeIndex(enemyTanks.indexOf(tank, false));
                         bullets.removeIndex(bullets.indexOf(bullet, false));
                         createTankInRandomLocation();
                         break;
                     }
                 }
-            }else{
+            } else {
                 bullets.removeIndex(bullets.indexOf(bullet, false));
             }
         }
@@ -162,7 +163,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        gamePort.update(width, height);
+        gamePort.update(width, height, true);
     }
 
     @Override
