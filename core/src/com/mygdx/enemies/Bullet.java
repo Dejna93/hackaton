@@ -39,6 +39,7 @@ public class Bullet extends GameHelper {
             bulletSprite.setPosition(bulletSprite.getX() , bulletSprite.getY() - 5);
         }
     }
+
     public void draw()
     {
         batch.begin();
@@ -46,11 +47,11 @@ public class Bullet extends GameHelper {
         batch.end();
     }
 
-    public float getX() {
+    private float getX() {
         return bulletSprite.getX();
     }
 
-    public float getY() {
+    private float getY() {
         return bulletSprite.getY();
     }
 

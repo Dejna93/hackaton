@@ -19,9 +19,6 @@ import com.mygdx.helpers.Direction;
 import java.util.Iterator;
 import java.util.Random;
 
-/**
- * Created by d.holuj on 06-Oct-17.
- */
 
 public class PlayScreen implements Screen {
 
@@ -66,12 +63,8 @@ public class PlayScreen implements Screen {
         float y = (float) (random.nextInt(MyGame.V_HEIGHT+16) - 32);
         createTank(x, y);
     }
-
-
+    
     public void handleKey(float dt) {
-        boolean allClear = true;
-        Rectangle endPosition;
-
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
@@ -144,20 +137,28 @@ public class PlayScreen implements Screen {
                 while(tankIter.hasNext()){
                     Tank tank = tankIter.next();
                     if (bullet.isCollision(bullet.getRectangle(), tank.getRectangle())){
-                        enemyTanks.removeIndex(enemyTanks.indexOf(tank, false));
-                        bullets.removeIndex(bullets.indexOf(bullet, false));
+                        usunCzolg(tank);
+                        usunPocisk(bullet);
                         createTankInRandomLocation();
                         break;
                     }
                 }
             }else{
-                bullets.removeIndex(bullets.indexOf(bullet, false));
+                usunPocisk(bullet);
             }
         }
 
         game.batch.begin();
         //game.batch.draw(img, leftButton.x, leftButton.y);
         game.batch.end();
+    }
+
+    private void usunCzolg(Tank czolg){
+        enemyTanks.removeIndex(enemyTanks.indexOf(czolg, false));
+    }
+
+    private void usunPocisk(Bullet pocisk){
+        bullets.removeIndex(bullets.indexOf(pocisk, false));
     }
 
     @Override
