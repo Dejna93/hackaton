@@ -30,3 +30,17 @@ Nasz ekran składa się z:
 - konstruktora -> Tu zainicjalizujemy nasze zmienne
 - funkcji update -> Tu będziemy pobierać dane od użytkownika. Metoda handle key uruchamia następny ekran po tym, jak Gdx.input.isTouched() zwróci prawda, czyli użytkownik dotknie ekranu.
 - render -> To odświeżamy non stop. Tutaj będziemy rysować i właśnie to robimy. Funkcje draw umieszczają nasze 3 obiekty na ekranie. Pamiętajcie, że lewy górny róg to 0,0. No i że trzeba odjąć pół obiektu, aby był na środku, bo nasza pozycja będzie dotyczyć domyślnie krawędzi. Stąd te dziwne odejmowanie i dodawanie.
+- dispose -> Co się pootwierało, trzeba pozamykać :) Nie zapominajmy sprzątać po sobie w kodzie. 
+
+No to powiedzmy, że użytkownik nacisnął coś na ekranie. Nasz update zauważył, że nastąpiło wciśnięcie i można już wywołać znany nam setScreen() -> PRZECHODZIMY DO KOLEJNEGO EKRANU. 
+
+###### 5.PlayScreen, czyli Let The Bodies Hit The Floor.
+Czas na pancerną rozwałkę. Jednak nie będzie tak łatwo, będziemy dodawać wszystko po kolei. Zacznijmy od czołgu. Aby mnie pisać wszystkiego w jednym miejscu, Stworzymy klasę Player. Od razu jesteśmy świadomi, że nasze czołgi będą zasuwać w 4 strony i będą mogły się obracać. Potrzebujemy rozrózniać te akcje. Dlatego powstaną klasy 
+- Kierunek 
+- Obrot
+One przechowują nam dane w przyjemnej i zrozumialej dla oka formie, jak góra, dół, prawo, lewo i kąty 90, 180etc.
+Teraz mamy juz wszystko, aby ruszac czolgiem. A wiec klasa czolg!
+
+###### Nasz pancerny bohater: Czołg
+
+
