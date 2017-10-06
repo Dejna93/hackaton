@@ -77,17 +77,19 @@ public class PlayScreen implements Screen {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
             gameCamera.unproject(touchPos);
             Rectangle tankPos = player.getRectangle();
-            if ((Math.abs(touchPos.x) - Math.abs(tankPos.getX())) > (Math.abs(touchPos.y) - Math.abs(tankPos.getY()))){
+            if ((Math.abs(touchPos.x - tankPos.getX())) > (Math.abs(touchPos.y - tankPos.getY()))){
                 if (touchPos.x > tankPos.getX()){
-                    player.move(Direction.UP, dt, enemyTanks);
-                } else {
-                    player.move(Direction.DOWN, dt, enemyTanks);
-                }
-            } else {
-                if (touchPos.y > tankPos.getY()){
                     player.move(Direction.RIGHT, dt, enemyTanks);
                 } else {
                     player.move(Direction.LEFT, dt, enemyTanks);
+                }
+            } else {
+                if (touchPos.y > tankPos.getY()){
+                    player.move(Direction.UP, dt, enemyTanks);
+                } else {
+                    player.move(Direction.DOWN, dt, enemyTanks);
+
+
                 }
             }
 //            if (leftButton.contains(new Vector2(touchPos.x,touchPos.y))){
@@ -113,7 +115,7 @@ public class PlayScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
         {
             if (player.lastShotTime + 500 < TimeUtils.millis()){
-                bullets.add(new Bullet(game.batch, player.getDirection(), player.getX() , player.getY()));
+                bullets.add(new Bullet(game.batch, player.getDirection(), player.getX()+7.5f , player.getY()+7.5f));
                 player.lastShotTime = TimeUtils.millis();
             }
         }
