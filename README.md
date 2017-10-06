@@ -41,6 +41,24 @@ Czas na pancerną rozwałkę. Jednak nie będzie tak łatwo, będziemy dodawać 
 One przechowują nam dane w przyjemnej i zrozumialej dla oka formie, jak góra, dół, prawo, lewo i kąty 90, 180etc.
 Teraz mamy juz wszystko, aby ruszac czolgiem. A wiec klasa czolg!
 
-###### Nasz pancerny bohater: Czołg
+###### 6.Nasz pancerny bohater: Czołg
 
+Co może robić Czołg.
 
+- Czołg moze być! Więc ustalmy jego rozmiar i go narysujmy. Będzie to Sprite, bo chcemy, aby interakcja między innymi obiektami na planszy obowiącywała.
+- Czołg kiedyś wystrzelił. I aby nie robił tego zbyt często, musimy pamiętać, co ile to się dzieje.
+- Czołg będzie się poruszał. W prawo, lewo itp. 
+- Czołg będzie się poruszał tam, gdzie użytkownik chce. Czyli obslugujemy input.
+- Potrzebujemu zwracać kolizję. Więc musimy dostać prostokąt, który nasz czołg reprezentuje.
+Bardzo istotny tu jest parametr deltatime. Jest on zależny od parametrów procesora, więc mnożenie przez niego sprawia, że ruszamy się tak samo płynnie na szybszych i wolniejszych urządzeniach. A kiedy coś postrzeli? Musi wybuchnąć. Czyli klasa Eksplozja. W momencie, w którym natrafimy pociskiem, następuje bum. Wtedy pojawia się obraz wybuchu na mapie.
+
+###### 7.PlayScreen.
+
+PlayGame jest znanym nam obiektem rozszerzającym scenę. Czyli będzie wczytywal akcję użytkownika i poruszał czołgiem. Tutaj możecie zobaczyć w komnetarzach jak wczytać input. Zapraszamy do implementowania własnych opcji, wszystkie metody są dostępne.
+Zróbmy tak:
+- Postaraj się samodzielnie umieścić - narysować czołg.
+- Przesuń go. Użyj gotowego move. Zastanow się, jak to zrobć
+- Dodaj przeciwników, możesz wzorować się na naszym kodzie.
+
+Hej, Pamiętaj, że zawsze, kiedy czegoś nie jesteś pewien, możesz eksperymentować z gotowym, zakomentowanym kodem. 
+Życzymy przyjemnej rozgrywki :D
