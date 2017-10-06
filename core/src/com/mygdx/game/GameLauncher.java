@@ -42,15 +42,13 @@ public class GameLauncher implements Screen {
         wzialemToZNeta = new BitmapFont(Gdx.files.internal("font.fnt"));
     }
 
-    public void update(float dt) {
-        handleKey(dt);
+    public void update() {
+        handleKey();
     }
 
-    public void handleKey(float dt) {
+    public void handleKey() {
         if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(),0);
-            gameCamera.unproject(touchPos);
+            game.setScreen(new PlayScreen(game));
 //            if (leftButton.contains(new Vector2(touchPos.x,touchPos.y))){
 //                Gdx.app.log("Mouse Event","Projected at " + touchPos.x + "," + touchPos.y);
 //            }
@@ -65,6 +63,7 @@ public class GameLauncher implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(gameCamera.combined);
 
+        update();
         gameCamera.update();
 
         wzialemToZNeta.setColor(255,0,0,50);
