@@ -27,15 +27,18 @@ public class Tank extends GameHelper{
     private float deltaTime;
     private float speed = 100;
     private float lastOperation;
+    private boolean czy_przeciwnik;
 
-    public Tank(SpriteBatch batch) {
-        playerTexture = new Texture("player.png");
+    public Tank(SpriteBatch batch, boolean czy_przeciwnik) {
+        this.czy_przeciwnik = czy_przeciwnik;
+        playerTexture = new Texture(this.czy_przeciwnik? "przeciwnik.png": "player.png");
         // Sprite dla gracza przyjmuje texture i 16x16 dlugosc i szerokosc
         playerSprite = new Sprite(playerTexture, 16, 16);
         this.batch = batch;
         lastShotTime = 0;
         this.deltaTime = 0;
         lastOperation = 0;
+
     }
 
     public void draw() {
@@ -122,9 +125,7 @@ public class Tank extends GameHelper{
             move(direction,deltaTime,tanks);
             lastOperation = TimeUtils.millis();
         }
-
     }
-
 
     public void setPositionFromRectangle(Rectangle rect) {
         playerSprite.setPosition(rect.x, rect.y);
@@ -160,7 +161,6 @@ public class Tank extends GameHelper{
         if (direction == Kierunek.DOL) {
             playerSprite.setRotation(Obrot.DOL);
         }
-
     }
 
     public int getDirection() {

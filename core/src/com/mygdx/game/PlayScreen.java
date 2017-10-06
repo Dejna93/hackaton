@@ -43,14 +43,14 @@ public class PlayScreen implements Screen {
 
     public PlayScreen(MyGame game) {
         this.game = game;
-        img = new Texture("badlogic.jpg");
+        img = new Texture("tlo_gry.jpg");
         gameCamera = new OrthographicCamera(MyGame.V_WIDTH, MyGame.V_HEIGHT);
         gameCamera.setToOrtho(false);
         gamePort = new FillViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, gameCamera);
 
         shootButtonTexture = new Texture("shoot.png");
         shootButton = new Rectangle(MyGame.V_WIDTH - 100, 60, 64, 64);
-        player = new Tank(this.game.batch);
+        player = new Tank(this.game.batch, false);
         player.setPosition(MyGame.V_WIDTH / 2, MyGame.V_HEIGHT / 2);
         for (int i = 0; i < 4; i++) {
             createTankInRandomLocation();
@@ -63,7 +63,7 @@ public class PlayScreen implements Screen {
     }
 
     public void createTank(float x, float y) {
-        Tank tank = new Tank(this.game.batch);
+        Tank tank = new Tank(this.game.batch, true);
         tank.setPositionFromRectangle(new Rectangle(x, y, 16, 16));
         enemyTanks.add(tank);
     }
@@ -76,9 +76,6 @@ public class PlayScreen implements Screen {
     }
 
     public void handleKey(float dt) {
-        boolean allClear = true;
-        Rectangle endPosition;
-
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -128,6 +125,9 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(gameCamera.combined);
+        game.batch.begin();
+        game.batch.draw(img, 0, 0, MyGame.V_WIDTH, MyGame.V_HEIGHT);
+        game.batch.end();
 
         game.batch.begin();
         game.batch.draw(shootButtonTexture, shootButton.x, shootButton.y, shootButton.getWidth(), shootButton.getHeight());
