@@ -1,13 +1,17 @@
 package com.mygdx.enemies;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.helpers.Direction;
 import com.mygdx.helpers.GameHelper;
 import com.mygdx.helpers.Rotation;
+
+import java.util.Random;
 
 /**
  * Created by d.holuj on 06-Oct-17.
@@ -23,6 +27,7 @@ public class Tank extends GameHelper{
     int currentState = Direction.UP;
     private float deltaTime;
     private float speed =100;
+    private float lastOperation;
 
     public Tank(SpriteBatch batch) {
         playerTexture = new Texture("player.jpg");
@@ -31,6 +36,7 @@ public class Tank extends GameHelper{
         this.batch = batch;
         lastShotTime = 0;
         this.deltaTime = 0;
+        lastOperation = 0;
     }
 
     public void draw() {
@@ -102,6 +108,24 @@ public class Tank extends GameHelper{
         }
         changeDirection(directionMove);
     }
+
+    public void makeRandomMove(float deltaTime, Tank tank)
+    {
+        //int direction = Direction.LEFT + (int)(Math.random() * Direction.DOWN);
+        Random rand = new Random();
+        float decision = rand.nextFloat() * 100;
+
+        if (decision <= 25)
+        {
+            Array<Tank> tanks = new Array<Tank>();
+            tanks.add(tank);
+            int direction = (int)decision % 4;
+            move(direction,deltaTime,tanks);
+            lastOperation = TimeUtils.millis();
+        }
+
+    }
+
 
     public void setPositionFromRectangle(Rectangle rect) {
         playerSprite.setPosition(rect.x, rect.y);

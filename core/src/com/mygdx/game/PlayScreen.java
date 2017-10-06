@@ -137,6 +137,7 @@ public class PlayScreen implements Screen {
         player.draw();
         for (Tank tank : enemyTanks) {
             tank.draw();
+            tank.makeRandomMove(delta,player);
         }
 
         Iterator<Bullet> iter = bullets.iterator();
