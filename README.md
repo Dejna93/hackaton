@@ -43,4 +43,12 @@ Teraz mamy juz wszystko, aby ruszac czolgiem. A wiec klasa czolg!
 
 ###### Nasz pancerny bohater: Czołg
 
+Co może robić Czołg.
+
+- Czołg moze być! Więc ustalmy jego rozmiar i go narysujmy. Będzie to Sprite, bo chcemy, aby interakcja między innymi obiektami na planszy obowiącywała.
+- Czołg kiedyś wystrzelił. I aby nie robił tego zbyt często, musimy pamiętać, co ile to się dzieje.
+- Czołg będzie się poruszał. W prawo, lewo itp. 
+- Czołg będzie się poruszał tam, gdzie użytkownik chce. Czyli obslugujemy input.
+- Potrzebujemu zwracać kolizję. Więc musimy dostać prostokąt, który nasz czołg reprezentuje.
+Bardzo istotny tu jest parametr deltatime. Jest on zależny od parametrów procesora, więc mnożenie przez niego sprawia, że ruszamy się tak samo płynnie na szybszych i wolniejszych urządzeniach. A kiedy coś postrzeli? Musi wybuchnąć. Czyli klasa Eksplozja. W momencie, w którym natrafimy pociskiem, następuje bum. Wtedy pojawia się obraz wybuchu na mapie.
 
