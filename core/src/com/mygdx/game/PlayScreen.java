@@ -72,7 +72,6 @@ public class PlayScreen implements Screen {
         createTank(x, y);
     }
 
-
     public void handleKey(float dt) {
         boolean allClear = true;
         Rectangle endPosition;
@@ -159,6 +158,14 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         //game.batch.draw(img, leftButton.x, leftButton.y);
         game.batch.end();
+    }
+
+    private void usunCzolg(Tank czolg){
+        enemyTanks.removeIndex(enemyTanks.indexOf(czolg, false));
+    }
+
+    private void usunPocisk(Bullet pocisk){
+        bullets.removeIndex(bullets.indexOf(pocisk, false));
     }
 
     @Override
