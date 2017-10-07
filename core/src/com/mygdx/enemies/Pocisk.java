@@ -20,7 +20,7 @@ public class Pocisk extends Pomocnik {
     public Pocisk(SpriteBatch batch, int kierunek, float x, float y){
         this.batch = batch;
         this.kierunek = kierunek;
-        bulletSprite = new Sprite(new Texture("bullet.jpg"), 3 ,3);
+        bulletSprite = new Sprite(new Texture("bullet.jpg"), 5 ,5);
         bulletSprite.setPosition(x, y);
     }
 

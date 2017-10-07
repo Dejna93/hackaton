@@ -32,8 +32,19 @@ public class Czolg extends Pomocnik {
 
     private boolean czyPrzeciwnik = false;
 
-    public Czolg(SpriteBatch batch) {
-        czolgTexture = new Texture("player.jpg");
+    public Czolg(SpriteBatch batch, boolean czyPrzeciwnik, boolean pierwszy_gracz) {
+        String texture;
+		if (!czyPrzeciwnik){
+            if (pierwszy_gracz){
+                texture = "player.png";
+            }else{
+                texture = "player2.png";
+            }
+		}else{
+            texture = "przeciwnik.png";
+        }
+        this.czyPrzeciwnik = czyPrzeciwnik;
+        czolgTexture = new Texture(texture);
         // Sprite dla gracza przyjmuje texture i 16x16 dlugosc i szerokosc
         czolgSprite = new Sprite(czolgTexture, 16, 16);
         this.batch = batch;
@@ -117,13 +128,14 @@ public class Czolg extends Pomocnik {
         Random rand = new Random();
         float procentDecyzji = rand.nextFloat() * 100;
 
-        if (procentDecyzji <= 25) {
-            Array<Czolg> czolgi = new Array<Czolg>();
-            czolgi.add(czolg);
-            int kierunek = (int) procentDecyzji % 4;
-            porusz(kierunek, deltaTime, czolgi);
-            czasOstatniegoLosowania = TimeUtils.millis();
+        Array<Czolg> czolgi = new Array<Czolg>();
+        czolgi.add(czolg);
+        int kierunek = (int) procentDecyzji % 10;
+        if (procentDecyzji > 4){
+            kierunek = this.obecnyKierunek;
         }
+        porusz(kierunek, deltaTime, czolgi);
+        czasOstatniegoLosowania = TimeUtils.millis();
 
     }
 
@@ -150,10 +162,10 @@ public class Czolg extends Pomocnik {
     private void zmienKierunek(int kierunek) {
         this.obecnyKierunek = kierunek;
         if (kierunek == Kierunek.LEWO) {
-            czolgSprite.setRotation(Obrot.LEWO);
+            czolgSprite.setRotation(Obrot.PRAWO);
         }
         if (kierunek == Kierunek.PRAWO) {
-            czolgSprite.setRotation(Obrot.PRAWO);
+            czolgSprite.setRotation(Obrot.LEWO);
         }
         if (kierunek == Kierunek.GORA) {
             czolgSprite.setRotation(Obrot.GORA);

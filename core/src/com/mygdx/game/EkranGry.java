@@ -3,9 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -32,13 +34,18 @@ public class EkranGry implements Screen {
     private OrthographicCamera kamera;
 
     private Czolg gracz;
+	private Czolg gracz2;
 
     private Array<Czolg> wrogieCzolgi = new Array<Czolg>();
     private Array<Pocisk> pociski = new Array<Pocisk>();
     private Array<Eksplozja> eksplozjaArray = new Array<Eksplozja>();
 
     private Texture strzalTexture;
+    private Texture tloTexture;
     private Rectangle strzalPrzycisk;
+    private Rectangle tlo_gry;
+
+    private Sound wystrzal;
 
     public EkranGry(MojaGra game) {
         this.game = game;
@@ -46,12 +53,14 @@ public class EkranGry implements Screen {
         kamera = new OrthographicCamera(MojaGra.V_WIDTH, MojaGra.V_HEIGHT);
         kamera.setToOrtho(false);
         graViewport = new FillViewport(MojaGra.V_WIDTH, MojaGra.V_HEIGHT, kamera);
-
+        wystrzal = Gdx.audio.newSound(Gdx.files.internal("grenade-launcher-daniel_simon.mp3"));
+        tloTexture = new Texture("tlo_gry.jpg");
         strzalTexture = new Texture("shoot.png");
+        tlo_gry = new Rectangle(0, 0, MojaGra.V_WIDTH, MojaGra.V_HEIGHT);
         strzalPrzycisk = new Rectangle(MojaGra.V_WIDTH - 100, 60, 64, 64);
-        gracz = new Czolg(this.game.batch);
+        gracz = new Czolg(this.game.batch, false, true);
         gracz.setPosition(MojaGra.V_WIDTH / 2, MojaGra.V_HEIGHT / 2);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 20; i++) {
             losujPozycjeCzolgu();
         }
         kamera.position.set(MojaGra.V_WIDTH / 2, MojaGra.V_HEIGHT / 2, 0);
@@ -62,7 +71,7 @@ public class EkranGry implements Screen {
     }
 
     public void stworzCzolg(float x, float y) {
-        Czolg tank = new Czolg(this.game.batch);
+        Czolg tank = new Czolg(this.game.batch, true, false);
         tank.ustawPozycjeZKwadratu(new Rectangle(x, y, 16, 16));
         wrogieCzolgi.add(tank);
     }
@@ -102,7 +111,7 @@ public class EkranGry implements Screen {
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
         {
-            gracz.porusz(Kierunek.LEWO, dt, wrogieCzolgi);
+			gracz.porusz(Kierunek.LEWO, dt, wrogieCzolgi);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             gracz.porusz(Kierunek.PRAWO, dt, wrogieCzolgi);
         } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -113,6 +122,7 @@ public class EkranGry implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             if (gracz.ostatniStrzal + 500 < TimeUtils.millis()) {
                 pociski.add(new Pocisk(game.batch, gracz.getKierunek(), gracz.getX() + 7.5f, gracz.getY() + 7.5f));
+                wystrzal.play();
                 gracz.ostatniStrzal = TimeUtils.millis();
             }
         }
@@ -124,6 +134,10 @@ public class EkranGry implements Screen {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(kamera.combined);
+
+        game.batch.begin();
+        game.batch.draw(tloTexture, tlo_gry.x, tlo_gry.y, tlo_gry.getWidth(), tlo_gry.getHeight());
+        game.batch.end();
 
         game.batch.begin();
         game.batch.draw(strzalTexture, strzalPrzycisk.x, strzalPrzycisk.y, strzalPrzycisk.getWidth(), strzalPrzycisk.getHeight());
@@ -150,6 +164,7 @@ public class EkranGry implements Screen {
                         usunCzolg(tank);
                         usunPocisk(bullet);
                         losujPozycjeCzolgu();
+
                         break;
                     }
                 }
